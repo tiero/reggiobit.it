@@ -7,7 +7,7 @@ class PhoneInput extends Component {
       <div className="field">
         <label className="label is-medium">Telefono</label>
         <div className="control is-large">
-          <input className={`input is-large ${invalid}`} type="number" placeholder="☎️ Numero di cellulare" onChange={this.props.onChange}/>
+          <input className={`input is-large ${invalid}`} type="tel" placeholder="☎️ Numero di cellulare" onChange={this.props.onChange}/>
         </div>
       </div>
     );

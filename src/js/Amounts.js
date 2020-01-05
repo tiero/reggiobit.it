@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 class Amounts extends Component {
-  
+
   constructor(props) {
     super(props);
 
@@ -22,11 +22,15 @@ class Amounts extends Component {
     if (currency !== 'EUR' && currency !== 'BTC')
       return;
 
-    if (currency === 'EUR')
-      this.setState({ euro: value, bitcoin: (value / priceWithFee) });
-    else 
-      this.setState({ bitcoin: value, euro: (value * priceWithFee) });
+    let values = {};
 
+    if (currency === 'EUR')
+      values = { euro: value, bitcoin: Number((value / priceWithFee).toFixed(8)) };
+    else 
+      values = { bitcoin: value, euro: Number((value * priceWithFee).toFixed(2)) };
+
+    this.props.onChange(values);
+    this.setState(values);
   }
 
   render() {
@@ -50,16 +54,16 @@ class Amounts extends Component {
 
 class EuroInput extends Component {
   render() {
-    const invalid = false && "is-danger";
+    const {value} = this.props;
     return (
       <div className="field">
         <label className="label is-medium">Euro da scambiare </label>
         <div className="control is-large">
           <input 
-            className={`input is-large ${invalid}`} 
+            className={`input is-large`} 
             type="number" placeholder="💶 100" 
             onChange={this.props.onChange} 
-            value={this.props.value}
+            value={value}
           />
         </div>
       </div>
@@ -69,16 +73,16 @@ class EuroInput extends Component {
 
 class BitcoinInput extends Component {
   render() {
-    const invalid = false && "is-danger";
+    const {value} = this.props;
     return (
       <div className="field">
         <label className="label is-medium">Bitcoin da scambiare</label>
         <div className="control is-large">
           <input 
-            className={`input is-large ${invalid}`} 
+            className={`input is-large`} 
             type="number" placeholder="🧙‍♂️ 0.01" 
             onChange={this.props.onChange} 
-            value={this.props.value}
+            value={value}
           />
         </div>
       </div>
