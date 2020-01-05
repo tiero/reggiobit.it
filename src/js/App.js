@@ -19,9 +19,7 @@ class App extends Component {
     this.state = {
       type: typeOptions[0],
       method: methodOptions[0],
-      price: undefined,
-      euro: undefined,
-      bitcoin: undefined
+      price: null,
     }
   }
 
@@ -34,7 +32,7 @@ class App extends Component {
   }
 
   render() {
-    const { method, price, euro, bitcoin } = this.state;
+    const { method, price } = this.state;
     const priceWithFee = Number((price + (price * DEALER_FEE)).toFixed(2));
 
     return (
