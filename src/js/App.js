@@ -1,5 +1,12 @@
 import React, { Component } from "react";
 
+// Custom components
+import EuroInput from './EuroInput';
+import PhoneInput from './PhoneInput';
+import RadioButton from './RadioButton';
+import BitcoinInput from './BitcoinInput';
+import TelegramInput from './TelegramInput';
+
 const typeOptions = ['Compra', 'Vendi'];
 const methodOptions = ['Telegram', 'SMS', 'Chiamata'];
 
@@ -10,24 +17,54 @@ class App extends Component {
     super();
     this.state = {
       type: typeOptions[0],
-      method: methodOptions[0]
+      method: methodOptions[0],
+      price:null
     }
   }
 
+  componentDidMount() {
+
+    fetch('https://blockchain.info/ticker')
+      .then(res => res.json())
+      .then(json => this.setState({ price: json.EUR.last }))
+
+  }
+
+  onValueChange(value, currency, priceWithFee) {
+
+    if (isNaN(priceWithFee))
+      return;
+
+    if (isNaN(value))
+      return;
+
+    if (currency !== 'EUR' && currency !== 'BTC')
+      return;
+
+    if (currency === 'EUR')
+      console.log(value / priceWithFee)
+
+    if (currency === 'BTC')
+      console.log(value * priceWithFee)
+
+  }
+
   render() {
-    const { method } = this.state;
+    const { method, price } = this.state;
+    const priceWithFee = (price + (price*0.01)).toFixed(2)
     return (
       <div className="box has-text-centered">
 
         <div className="columns is-mobile is-centered">
           <div className="column is-half">
+            <h1 className="title">{price && `1 BTC = ${priceWithFee} Euro`}</h1>
             <label className="label is-medium">Tipo di scambio</label>
             <RadioButton 
               options={typeOptions} 
               onChange={type => this.setState({type})}
             />
-            <EuroInput onChange={e => console.log(e.target.value)}/>
-            <BitcoinInput onChange={e => console.log(e.target.value)} />
+            <EuroInput onChange={e => this.onValueChange(e.target.value, 'EUR', priceWithFee)}/>
+            <BitcoinInput onChange={e => this.onValueChange(e.target.value, 'BTC', priceWithFee)} />
             <label className="label is-medium">Metodo di contatto</label>
             <RadioButton 
               options={methodOptions} 
@@ -46,102 +83,9 @@ class App extends Component {
 }
 
 
-class EuroInput extends Component {
-  render() {
-    const invalid = false && "is-danger";
-    return (
-      <div className="field">
-        <label className="label is-medium">Euro da scambiare </label>
-        <div className="control is-large">
-          <input className={`input is-large ${invalid}`} type="number" placeholder="💶 100" onChange={this.props.onChange}/>
-        </div>
-      </div>
-    );
-  }
-}
-
-class BitcoinInput extends Component {
-  render() {
-    const invalid = false && "is-danger";
-    return (
-      <div className="field">
-        <label className="label is-medium">Bitcoin da scambiare</label>
-        <div className="control is-large">
-          <input className={`input is-large ${invalid}`} type="number" placeholder="🧙‍♂️ 0.01" onChange={this.props.onChange} />
-        </div>
-      </div>
-    );
-  }
-}
-
-class TelegramInput extends Component {
-  render() {
-    const invalid = false && "is-danger";
-    return (
-      <div className="field">
-        <label className="label is-medium">Username Telegram</label>
-        <div className="control is-large">
-          <input className={`input is-large ${invalid}`} type="text" placeholder="✈️ @MioUsername" onChange={this.props.onChange}/>
-        </div>
-      </div>
-    );
-  }
-}
-
-class PhoneInput extends Component {
-  render() {
-    const invalid = false && "is-danger";
-    return (
-      <div className="field">
-        <label className="label is-medium">Telefono</label>
-        <div className="control is-large">
-          <input className={`input is-large ${invalid}`} type="number" placeholder="☎️ Numero di cellulare" onChange={this.props.onChange}/>
-        </div>
-      </div>
-    );
-  }
-}
 
 
 
-
-
-class RadioButton extends Component {
-
-  constructor() {
-    super();
-    this.state = {
-      current: 0
-    }
-  }
-
-  render() {
-
-    const { current } = this.state;
-    const { options } = this.props;
-
-    const selected = `is-active is-primary has-text-white`;
-
-    return (
-      <div className="buttons is-centered">
-        {
-          options.map((option, index) => (
-            <button
-              key={option}
-              className={`button is-large ${current === index && selected}`}
-              onClick={() => {
-                this.setState({ current: index });
-                this.props.onChange(option)
-              }}
-            >
-              {option}
-            </button>
-          ))
-        }
-      </div>
-    );
-  }
-}
 
 
 export default App;
