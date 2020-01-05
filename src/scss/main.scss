@@ -1,0 +1,22 @@
+@charset "utf-8";
+
+@import "../../node_modules/bulma/sass/utilities/initial-variables";
+//Fonts
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400&display=swap');
+
+//Branding
+$light-blue: #0270d7;
+$black:#0a0a0a;
+$orange: #fab540;
+// Update Bulma's global variables
+$family-sans-serif: "Source Sans Pro","Helvetica Neue",Helvetica,Arial,sans-serif;
+$primary: $orange;
+
+// Hero section background image
+.has-bg-img { 
+  background: url("../images/header.jpg") center center; 
+  background-size:cover; 
+} 
+
+
+@import "../../node_modules/bulma/bulma";
