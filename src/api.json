@@ -1,0 +1,4 @@
+{
+  "PRICE_API": "https://blockchain.info/ticker",
+  "MAILER_API": "https://qkujwj75ma.execute-api.eu-west-1.amazonaws.com/production/order"
+}

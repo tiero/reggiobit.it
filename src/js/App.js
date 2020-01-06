@@ -7,7 +7,9 @@ import RadioButton from './RadioButton';
 import TelegramInput from './TelegramInput';
 
 //Logo 
-import ok from '../images/ok.png'
+import ok from '../images/ok.png';
+//API uris
+import { PRICE_API, MAILER_API } from '../api.json';
 
 const typeOptions = ['Compra', 'Vendi'];
 const methodOptions = ['Telegram', 'SMS', 'Chiamata'];
@@ -32,20 +34,46 @@ class App extends Component {
 
   componentDidMount() {
 
-    fetch('https://blockchain.info/ticker')
+    fetch(PRICE_API)
       .then(res => res.json())
       .then(json => this.setState({ price: json.EUR.last }))
+      .catch(err => console.log(err))
 
   }
 
 
   onSubmit() {
-    const { euro, bitcoin, methodValue } = this.state;
+    const { euro, bitcoin, methodValue, method, type } = this.state;
 
     if (!euro || !bitcoin || !methodValue)
       return alert('Inserire tutti i campi prima di procedere');
 
-    this.setState({ success: true })
+
+    fetch(MAILER_API, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        euro,
+        bitcoin,
+        method,
+        type,
+        contact: methodValue
+      }),
+    })
+      .then((response) => {
+        if (response.ok)
+          this.setState({ success: true })
+        else 
+          throw "Something went wrong";
+      })
+      .catch((error) => {
+        alert('Error:', error);
+      });
+
+
+    
   }
 
 
@@ -71,7 +99,7 @@ class App extends Component {
             <h1 className="title">{price && `1 BTC = ${priceWithFee} Euro`}</h1>
             <br />
             <p className="subtitle is-4">
-              Ti contatteremo per stabilire una data e luogo di incontro. 
+              Ti contatteremo per stabilire una data e luogo di incontro.
             </p>
 
             <br />
