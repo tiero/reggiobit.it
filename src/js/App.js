@@ -14,7 +14,7 @@ import { PRICE_API, MAILER_API } from '../api.json';
 const typeOptions = ['Compra', 'Vendi'];
 const methodOptions = ['Telegram', 'SMS', 'Chiamata'];
 
-const DEALER_FEE = 0.05
+const DEALER_FEE = 0.1
 
 
 class App extends Component {
@@ -79,7 +79,11 @@ class App extends Component {
 
   render() {
     const { method, price, success } = this.state;
-    const priceWithFee = Number((price + (price * DEALER_FEE)).toFixed(2));
+    const pricePlusFee = Number((price + (price * DEALER_FEE)).toFixed(2));
+    const priceMinusFee = Number((price - (price * DEALER_FEE)).toFixed(2));
+    console.log(price, priceMinusFee, pricePlusFee);
+    const priceWithFee = this.state.type == `Compra` ? pricePlusFee : priceMinusFee;
+
 
     if (success)
       return <SuccessScreen euro={this.state.euro} bitcoin={this.state.bitcoin} method={this.state.methodValue} />
